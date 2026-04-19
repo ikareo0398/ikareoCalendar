@@ -3,6 +3,7 @@ const fs = require('fs').promises;
 const { google } = require('googleapis');
 const https = require('https');
 const { Client, GatewayIntentBits } = require('discord.js');
+const express = require('express');
 
 const SCOPES = ['https://www.googleapis.com/auth/calendar'];
 const CREDENTIALS_PATH = 'credentials.json';
@@ -14,6 +15,19 @@ const client = new Client({
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent,
     ]
+});
+
+// Express Webサーバーの設定（Render用）
+const app = express();
+const port = process.env.PORT || 3000;
+
+// ヘルスチェック用エンドポイント
+app.get('/', (req, res) => {
+    res.json({
+        status: 'Bot is running! 🤖',
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString()
+    });
 });
 
 // --- Gemini解析 ---
